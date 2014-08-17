@@ -30,9 +30,9 @@ Run `grunt` for building, `grunt serve` for preview, and `grunt serve:dist` for 
 **Client**
 
 * Scripts: `JavaScript`, `CoffeeScript`
-* Markup:  `HTML`, `Jade`
+* Markup:  `HTML` default
 * Stylesheets: `CSS`, `Stylus`, `Sass`, `Less`,
-* Angular Routers: `ngRoute`, `ui-router`
+* Angular Routers: `ui-router` default
 
 **Server**
 
@@ -376,7 +376,7 @@ An example server component in `server/api`
 
 ## Contribute
 
-See the [contributing docs](https://github.com/DaftMonk/generator-sg/blob/master/contributing.md)
+See the [contributing docs](https://github.com/DaftMonk/generator-agnular-fullstack/blob/master/contributing.md)
 
 When submitting an issue, please follow the [guidelines](https://github.com/yeoman/yeoman/blob/master/contributing.md#issue-submission). Especially important is to make sure Yeoman is up-to-date, and providing the command or commands that cause the issue.
 
