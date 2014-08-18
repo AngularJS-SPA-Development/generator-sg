@@ -1,3 +1,4 @@
+// Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
 
 module.exports = function (grunt) {
@@ -15,7 +16,8 @@ module.exports = function (grunt) {
     ngtemplates: 'grunt-angular-templates',
     cdnify: 'grunt-google-cdn',
     protractor: 'grunt-protractor-runner',
-    injector: 'grunt-asset-injector'
+    injector: 'grunt-asset-injector',
+    buildcontrol: 'grunt-build-control'
   });
 
   // Time how long tasks take. Can help when optimizing build times
@@ -25,11 +27,11 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     // Project settings
+    pkg: grunt.file.readJSON('package.json'),
     yeoman: {
       // configurable paths
       client: require('./bower.json').appPath || 'client',
-      dist: 'dist',
-      mobile: 'mobile'
+      dist: 'dist'
     },
     express: {
       options: {
@@ -43,7 +45,7 @@ module.exports = function (grunt) {
       },
       prod: {
         options: {
-          script: '<%%= yeoman.dist %>/server/app.js'
+          script: 'dist/server/app.js'
         }
       }
     },
@@ -194,17 +196,6 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      mobile: {
-        files: [{
-          dot: true,
-          src: [
-            '.tmp',
-            // '<%%= yeoman.dist %>/*',
-            '<%%= yeoman.mobile %>/www/*',
-            '!<%%= yeoman.mobile %>/www/res'
-          ]
-        }]
-      },
       server: '.tmp'
     },
 
@@ -258,11 +249,11 @@ module.exports = function (grunt) {
     },
 
     // Automatically inject Bower components into the app
-    bowerInstall: {
+    wiredep: {
       target: {
         src: '<%%= yeoman.client %>/index.html',
         ignorePath: '<%%= yeoman.client %>/',
-        exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/'<% if(!filters.css) { %>, /bootstrap.css/, /font-awesome.css/ <% } %>]
+        exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', '/respond/'<% if(!filters.css) { %>, /bootstrap.css/, /font-awesome.css/ <% } %>]
       }
     },
 
@@ -376,7 +367,7 @@ module.exports = function (grunt) {
     // Replace Google CDN references
     cdnify: {
       dist: {
-        html: ['<%%= yeoman.dist %>/*.html']
+        html: ['<%%= yeoman.dist %>/public/*.html']
       }
     },
 
@@ -409,23 +400,33 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      mobile: {
-        expand: true,
-        cwd: '<%%= yeoman.dist %>/public',
-        dest: '<%%= yeoman.mobile %>/www',
-        src: ['**/*']
-      },
-      s_mobile: {
-        expand: true,
-        cwd: '<%%= yeoman.client %>',
-        dest: '<%%= yeoman.mobile %>/www',
-        src: ['**/*']
-      },
       styles: {
         expand: true,
         cwd: '<%%= yeoman.client %>',
         dest: '.tmp/',
         src: ['{app,components}/**/*.css']
+      }
+    },
+
+    buildcontrol: {
+      options: {
+        dir: 'dist',
+        commit: true,
+        push: true,
+        connectCommits: false,
+        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
+      },
+      heroku: {
+        options: {
+          remote: 'heroku',
+          branch: 'master'
+        }
+      },
+      openshift: {
+        options: {
+          remote: 'openshift',
+          branch: 'master'
+        }
       }
     },
 
@@ -693,109 +694,6 @@ module.exports = function (grunt) {
         }
       }
     },
-    cordovacli: {
-      options: {
-        path: '<%%= yeoman.mobile %>',
-        id: 'com.example.<%= appname %>',
-        name: '<%= appname %>',
-      },
-      create: {
-        options: {
-          command: ['create','platform', 'plugin'],
-          platforms: ['ios','android'],
-          plugins: ['camera', 'console', 'file', 'network-information']
-        }
-      },
-      add_platforms: {
-        options: {
-          command: 'platform',
-          action: 'add',
-          platforms: ['ios', 'android']
-        }
-      },
-      add_plugins: {
-        options: {
-          command: 'plugin',
-          action: 'add',
-          plugins: [
-              'camera',
-              'console',
-              'file',
-              'network-information',
-              // 'contacts',
-              // 'device',
-              // 'device-motion',
-              // 'device-orientation',
-              // 'dialogs',
-              // 'geolocation',
-              // 'globalization',
-              // 'inappbrowser',
-              // 'media',
-              // 'media-capture',
-              // 'splashscreen',
-              // 'vibration',
-              // 'battery-status'
-              
-          ]
-        }
-      },
-      rm_plugins: {
-        options: {
-          command: 'plugin',
-          action: 'rm',
-          plugins: [
-              'camera',
-              'console',
-              'file',
-              'network-information',
-              // 'media',
-              // 'media-capture',
-              // 'contacts',
-              // 'device',
-              // 'device-motion',
-              // 'device-orientation',
-              // 'dialogs',
-              // 'geolocation',
-              // 'globalization',
-              // 'inappbrowser',
-              // 'splashscreen',
-              // 'vibration',
-              // 'battery-status'
-          ]
-        }
-      },
-      build_ios: {
-        options: {
-          command: 'build',
-          platforms: ['ios']
-        }
-      },
-      build_android: {
-        options: {
-          command: 'build',
-          platforms: ['android']
-        }
-      },
-      emulate_android: {
-        options: {
-          command: 'emulate',
-          platforms: ['android'],
-          args: ['--target','Nexus5']
-        }
-      },
-      run_ios: {
-        options: {
-          command: 'run',
-          platforms: ['ios']
-        }
-      },
-      run_android: {
-        options: {
-          command: 'run',
-          platforms: ['android']
-        }
-      }
-    }
   });
 
   // Used for delaying livereload until after server has restarted
@@ -828,7 +726,7 @@ module.exports = function (grunt) {
         'injector:sass', <% } %>
         'concurrent:server',
         'injector',
-        'bowerInstall',
+        'wiredep',
         'autoprefixer',
         'concurrent:debug'
       ]);
@@ -842,7 +740,7 @@ module.exports = function (grunt) {
       'injector:sass', <% } %>
       'concurrent:server',
       'injector',
-      'bowerInstall',
+      'wiredep',
       'autoprefixer',
       'express:dev',
       'wait',
@@ -889,7 +787,7 @@ module.exports = function (grunt) {
         'injector:sass', <% } %>
         'concurrent:test',
         'injector',
-        'bowerInstall',
+        'wiredep',
         'autoprefixer',
         'express:dev',
         'protractor'
@@ -909,7 +807,7 @@ module.exports = function (grunt) {
     'injector:sass', <% } %>
     'concurrent:dist',
     'injector',
-    'bowerInstall',
+    'wiredep',
     'useminPrepare',
     'autoprefixer',
     'ngtemplates',
@@ -922,48 +820,6 @@ module.exports = function (grunt) {
     'rev',
     'usemin'
   ]);
-
-  grunt.registerTask('run', function (target) {
-
-    if (target === 'android') {
-      return grunt.task.run([
-        'build',
-        'clean:mobile',
-        'copy:mobile',
-        'cordovacli:run_android'
-      ]);
-    }
-    
-    else if (target === 'ios') {
-      return grunt.task.run([
-        'build',
-        'clean:mobile',
-        'copy:mobile',
-        'cordovacli:run_ios'
-      ]);
-    };
-
-  });
-
-  grunt.registerTask('srun', function (target) {
-
-    if (target === 'android') {
-      return grunt.task.run([
-        'clean:mobile',
-        'copy:s_mobile',
-        'cordovacli:run_android'
-      ]);
-    }
-    
-    else if (target === 'ios') {
-      return grunt.task.run([
-        'clean:mobile',
-        'copy:s_mobile',
-        'cordovacli:run_ios'
-      ]);
-    };
-
-  });
 
   grunt.registerTask('default', [
     'newer:jshint',
