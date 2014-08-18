@@ -1,4 +1,3 @@
-// Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
 
 module.exports = function (grunt) {
@@ -16,8 +15,7 @@ module.exports = function (grunt) {
     ngtemplates: 'grunt-angular-templates',
     cdnify: 'grunt-google-cdn',
     protractor: 'grunt-protractor-runner',
-    injector: 'grunt-asset-injector',
-    buildcontrol: 'grunt-build-control'
+    injector: 'grunt-asset-injector'
   });
 
   // Time how long tasks take. Can help when optimizing build times
@@ -27,7 +25,6 @@ module.exports = function (grunt) {
   grunt.initConfig({
 
     // Project settings
-    pkg: grunt.file.readJSON('package.json'),
     yeoman: {
       // configurable paths
       client: require('./bower.json').appPath || 'client',
@@ -249,7 +246,7 @@ module.exports = function (grunt) {
     },
 
     // Automatically inject Bower components into the app
-    wiredep: {
+    bowerInstall: {
       target: {
         src: '<%%= yeoman.client %>/index.html',
         ignorePath: '<%%= yeoman.client %>/',
@@ -367,7 +364,7 @@ module.exports = function (grunt) {
     // Replace Google CDN references
     cdnify: {
       dist: {
-        html: ['<%%= yeoman.dist %>/public/*.html']
+        html: ['<%%= yeoman.dist %>/*.html']
       }
     },
 
@@ -382,6 +379,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
+            'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
             'index.html'
@@ -405,28 +403,6 @@ module.exports = function (grunt) {
         cwd: '<%%= yeoman.client %>',
         dest: '.tmp/',
         src: ['{app,components}/**/*.css']
-      }
-    },
-
-    buildcontrol: {
-      options: {
-        dir: 'dist',
-        commit: true,
-        push: true,
-        connectCommits: false,
-        message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
-      },
-      heroku: {
-        options: {
-          remote: 'heroku',
-          branch: 'master'
-        }
-      },
-      openshift: {
-        options: {
-          remote: 'openshift',
-          branch: 'master'
-        }
       }
     },
 
@@ -726,7 +702,7 @@ module.exports = function (grunt) {
         'injector:sass', <% } %>
         'concurrent:server',
         'injector',
-        'wiredep',
+        'bowerInstall',
         'autoprefixer',
         'concurrent:debug'
       ]);
@@ -740,7 +716,7 @@ module.exports = function (grunt) {
       'injector:sass', <% } %>
       'concurrent:server',
       'injector',
-      'wiredep',
+      'bowerInstall',
       'autoprefixer',
       'express:dev',
       'wait',
@@ -787,7 +763,7 @@ module.exports = function (grunt) {
         'injector:sass', <% } %>
         'concurrent:test',
         'injector',
-        'wiredep',
+        'bowerInstall',
         'autoprefixer',
         'express:dev',
         'protractor'
@@ -807,7 +783,7 @@ module.exports = function (grunt) {
     'injector:sass', <% } %>
     'concurrent:dist',
     'injector',
-    'wiredep',
+    'bowerInstall',
     'useminPrepare',
     'autoprefixer',
     'ngtemplates',
