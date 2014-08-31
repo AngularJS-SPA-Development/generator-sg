@@ -1,4 +1,4 @@
-'use strict';
+!'use strict';
 
 module.exports = function (grunt) {
   var localConfig;
@@ -250,7 +250,7 @@ module.exports = function (grunt) {
       target: {
         src: '<%%= yeoman.client %>/index.html',
         ignorePath: '<%%= yeoman.client %>/',
-        exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', '/respond/'<% if(!filters.css) { %>, /bootstrap.css/, /font-awesome.css/ <% } %>]
+        exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', '/respond/', 'console-shim', 'modernizr'<% if(!filters.css) { %>, /bootstrap.css/, /font-awesome.css/ <% } %>]
       }
     },
 
