@@ -1,60 +1,85 @@
 'use strict';
 
-var _ = require('lodash');<% if (filters.mongoose) { %>
-var <%= classedName %> = require('./<%= name %>.model');<% } %>
+var <%= classedName %>Service = require('./<%= name %>.service');
 
-// Get list of <%= name %>s
-exports.index = function(req, res) {<% if (!filters.mongoose) { %>
-  res.json([]);<% } %><% if (filters.mongoose) { %>
-  <%= classedName %>.find(function (err, <%= name %>s) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, <%= name %>s);
-  });<% } %>
-};<% if (filters.mongoose) { %>
+exports.index = index;
+exports.show = show;
+exports.create = create;
+exports.update = update;
+exports.destroy = destroy;
+
+// Get list of <%= name %>
+function index(req, res) {
+  <%= classedName %>Service
+    .index()
+
+    .then(function(<%= name %>s) {
+      res.json(200, <%= name %>s);
+    })
+    .catch(function(err) {
+      res.send(500, err);
+    });
+};
 
 // Get a single <%= name %>
-exports.show = function(req, res) {
-  <%= classedName %>.findById(req.params.id, function (err, <%= name %>) {
-    if(err) { return handleError(res, err); }
-    if(!<%= name %>) { return res.send(404); }
-    return res.json(<%= name %>);
-  });
+function show(req, res) {
+  <%= classedName %>Service
+    .show(req.params.id)
+
+    .then(function(<%= name %>) {
+      res.json(<%= name %>);
+    })
+    .catch(function(err) {
+      if(err.code === 'NOT_FOUND') {
+        return res.send(404);
+      } 
+      res.send(500, err);
+    });
 };
 
 // Creates a new <%= name %> in the DB.
-exports.create = function(req, res) {
-  <%= classedName %>.create(req.body, function(err, <%= name %>) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, <%= name %>);
-  });
+function create(req, res) {
+  <%= classedName %>Service
+    .create(req.body)
+
+    .then(function(<%= name %>) {
+      res.json(201, <%= name %>);
+    })
+    .catch(function(err) {
+      res.send(500, err);
+    });
 };
 
 // Updates an existing <%= name %> in the DB.
-exports.update = function(req, res) {
+function update(req, res) {
   if(req.body._id) { delete req.body._id; }
-  <%= classedName %>.findById(req.params.id, function (err, <%= name %>) {
-    if (err) { return handleError(res, err); }
-    if(!<%= name %>) { return res.send(404); }
-    var updated = _.merge(<%= name %>, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, <%= name %>);
+
+  <%= classedName %>Service
+    .update(req.params.id, req.body)
+
+    .then(function(<%= name %>) {
+      res.json(201, <%= name %>);
+    })
+    .catch(function(err) {
+      if(err.code === 'NOT_FOUND') {
+        return res.send(404);
+      } 
+      res.send(500, err);
     });
-  });
 };
 
 // Deletes a <%= name %> from the DB.
-exports.destroy = function(req, res) {
-  <%= classedName %>.findById(req.params.id, function (err, <%= name %>) {
-    if(err) { return handleError(res, err); }
-    if(!<%= name %>) { return res.send(404); }
-    <%= name %>.remove(function(err) {
-      if(err) { return handleError(res, err); }
-      return res.send(204);
-    });
-  });
-};
+function destroy(req, res) {
+  <%= classedName %>Service
+    .destroy(req.params.id)
 
-function handleError(res, err) {
-  return res.send(500, err);
-}<% } %>
+    .then(function(<%= name %>) {
+      res.send(204);
+    })
+    .catch(function(err) {
+      if(err.code === 'NOT_FOUND') {
+        return res.send(404);
+      } 
+      res.send(500, err);
+    });
+};
