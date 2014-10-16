@@ -1,6 +1,6 @@
 {
   "name": "generator-sg",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Yeoman generator for creating MEAN stack applications, using MongoDB, Express, AngularJS, and Node and modified generator-angular-fullstack",
   "keywords": [
     "yeoman-generator",
@@ -17,7 +17,7 @@
   ],
   "homepage": "https://github.com/AngularJS-SPA-Development/generator-sg",
   "bugs": "https://github.com/AngularJS-SPA-Development/generator-sg/issues",
-  "author": "Peter Yun",
+  "author": "Peter YoungSik Yun",
   "original author": "Tyler Henkel",
   "repository": {
     "type": "git",
