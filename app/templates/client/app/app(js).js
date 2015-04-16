@@ -17,14 +17,14 @@
   }
 
   /* @ngInject */
-  function run($rootScope, $location, Auth) {
+  function run($rootScope, $location<% if(filters.mongoose) { %>, Auth<% } %>) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function (event, next) {
-      Auth.isLoggedInAsync(function(loggedIn) {
+      <% if(filters.mongoose) { %>Auth.isLoggedInAsync(function(loggedIn) {
         if (next.authenticate && !loggedIn) {
           $location.path('/login');
         }
-      });
+      });<% } %>
     });
   }
 
