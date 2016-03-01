@@ -1,9 +1,9 @@
 {
   "name": "<%= _.slugify(_.humanize(appname)) %>",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "server/app.js",
   "dependencies": {
-    "express": "~4.0.0",
+    "express": "~4.13.4",
     "morgan": "~1.0.0",
     "body-parser": "~1.0.0",
     "method-override": "~1.0.0",
@@ -30,7 +30,7 @@
     "socketio-jwt": "^2.0.2"<% } %>
   },
   "devDependencies": {
-    "grunt": "~0.4.4",
+    "grunt": "~0.4.5",
     "grunt-autoprefixer": "~0.7.2",
     "grunt-bower-install": "~1.4.0",
     "grunt-concurrent": "~0.5.0",
@@ -83,13 +83,13 @@
     "karma-coffee-preprocessor": "~0.2.1",
     "karma-jade-preprocessor": "0.0.11",
     "karma-phantomjs-launcher": "~0.1.4",
-    "karma": "~0.12.9",
+    "karma": "~0.13.21",
     "karma-ng-html2js-preprocessor": "~0.1.0",
     "supertest": "~0.11.0",
     "should": "~3.3.1"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=5.6.0"
   },
   "scripts": {
     "start": "NODE_ENV=production node server/app.js",
